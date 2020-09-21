@@ -44,9 +44,9 @@ type jsonStruct struct {
 func generateFeed(c echo.Context) error {
 
 	feed := &feeds.Feed{
-		Title:       "财新首页文档",
+		Title:       "财新首页文章",
 		Link:        &feeds.Link{Href: "https://leafduo.com/caixin-feed/feed.json"},
-		Description: "财新首页文档",
+		Description: "财新首页文章",
 		Author:      &feeds.Author{Name: "leafduo", Email: "leafduo@gmail.com"},
 		Created:     time.Now(),
 	}
