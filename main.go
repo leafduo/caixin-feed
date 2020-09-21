@@ -124,5 +124,5 @@ func getLink(channel string, timestamp int64, sourceID string) string {
 	}
 	date := time.Unix(timestamp, 0).Format("2006-01-02")
 
-	return fmt.Sprintf("https://%s.caixin.com/%s/%s.html", domain, date, sourceID)
+	return fmt.Sprintf("http://%s.caixin.com/%s/%s.html", domain, date, sourceID)
 }
