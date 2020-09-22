@@ -31,11 +31,12 @@ func main() {
 type jsonStruct struct {
 	Data struct {
 		List []struct {
-			Title       string `json:"title"`
-			Summary     string `json:"summary"`
-			ChannelName string `json:"channel_name"`
-			Time        string `json:"time"`
-			SourceID    string `json:"source_id"`
+			ID         string `json:"id"`
+			Title      string `json:"title"`
+			Summary    string `json:"summary"`
+			PictureURL string `json:"pics"`
+			Time       string `json:"time"`
+			URL        string `json:"web_url"`
 		} `json:"list"`
 	} `json:"data"`
 }
@@ -58,7 +59,7 @@ func generateFeed(c echo.Context) error {
 
 	err = addPage(2, feed)
 	if err != nil {
-		return echo.NewHTTPError(500, err.Error)
+		return echo.NewHTTPError(500, err.Error())
 	}
 
 	err = addPage(3, feed)
@@ -76,7 +77,7 @@ func generateFeed(c echo.Context) error {
 
 func addPage(pageNumber int, feed *feeds.Feed) error {
 	client := http.Client{Timeout: 20 * time.Second}
-	resp, err := client.Get(fmt.Sprintf("https://mappsv5.caixin.com/index_page_v5/index_page_%d.json", pageNumber))
+	resp, err := client.Get(fmt.Sprintf("http://mapiv5.caixin.com//m/api/getWapIndexListByPage?page=%d", pageNumber))
 	if err != nil {
 		return err
 	}
@@ -97,32 +98,12 @@ func addPage(pageNumber int, feed *feeds.Feed) error {
 		}
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:       item.Title,
-			Description: item.Summary,
+			Description: fmt.Sprintf("<p>%s</p><img src=\"%s\">", item.Summary, item.PictureURL),
 			Created:     time.Unix(timestamp, 0),
-			Link:        &feeds.Link{Href: getLink(item.ChannelName, timestamp, item.SourceID)},
-			Id:          item.SourceID,
+			Link:        &feeds.Link{Href: item.URL},
+			Id:          item.ID,
 		})
 	}
 
 	return nil
-}
-
-var channelMap = map[string]string{
-	"金融":   "finance",
-	"财新周刊": "weekly",
-	"公司":   "companies",
-	"世界":   "international",
-	"政经":   "china",
-	"图片":   "photos",
-	"观点":   "opinion",
-}
-
-func getLink(channel string, timestamp int64, sourceID string) string {
-	domain := channelMap[channel]
-	if len(domain) == 0 {
-		domain = "www"
-	}
-	date := time.Unix(timestamp, 0).Format("2006-01-02")
-
-	return fmt.Sprintf("http://%s.caixin.com/%s/%s.html", domain, date, sourceID)
 }
