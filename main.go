@@ -98,7 +98,8 @@ func addPage(pageNumber int, feed *feeds.Feed) error {
 		}
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:       item.Title,
-			Description: fmt.Sprintf("<p>%s</p><img src=\"%s\">", item.Summary, item.PictureURL),
+			Description: item.Summary,
+			Content:     fmt.Sprintf("<p>%s</p><img src=\"%s\">", item.Summary, item.PictureURL),
 			Created:     time.Unix(timestamp, 0),
 			Link:        &feeds.Link{Href: item.URL},
 			Id:          item.ID,
