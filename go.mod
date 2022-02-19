@@ -4,5 +4,6 @@ go 1.14
 
 require (
 	github.com/gorilla/feeds v1.1.1
-	github.com/labstack/echo/v4 v4.1.16
+	github.com/kr/pretty v0.3.0 // indirect
+	github.com/labstack/echo/v4 v4.6.3
 )
