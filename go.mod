@@ -1,8 +1,6 @@
 module github.com/leafduo/caixin-feed
 
-go 1.24.0
-
-toolchain go1.24.2
+go 1.25.1
 
 require (
 	github.com/gorilla/feeds v1.2.0
