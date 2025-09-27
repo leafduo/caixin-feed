@@ -16,4 +16,4 @@
 
 # Application specific
 caixin-feed
-articles.db
+data/
