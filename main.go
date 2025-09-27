@@ -7,6 +7,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -79,7 +81,20 @@ type Article struct {
 }
 
 func initDB() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", "articles.db")
+	// Get data directory path from environment variable, default to ./data
+	dataDir := os.Getenv("DATA_DIR")
+	if dataDir == "" {
+		dataDir = "./data"
+	}
+
+	// Ensure the directory exists
+	if err := os.MkdirAll(dataDir, 0755); err != nil {
+		return nil, fmt.Errorf("failed to create directory %s: %v", dataDir, err)
+	}
+
+	// Database file path is inside the data directory
+	dbPath := filepath.Join(dataDir, "articles.db")
+	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		return nil, err
 	}

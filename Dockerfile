@@ -17,6 +17,12 @@ FROM alpine:3.22
 # Install SQLite runtime library
 RUN apk add --no-cache sqlite
 
+# Create data directory
+RUN mkdir -p /data
+
 COPY --from=build /caixin-feed/caixin-feed /caixin-feed/caixin-feed
+
+# Set default environment variable for data directory
+ENV DATA_DIR=/data
 
 CMD ["/caixin-feed/caixin-feed"]
